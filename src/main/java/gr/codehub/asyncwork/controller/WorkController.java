@@ -7,16 +7,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @AllArgsConstructor
 public class WorkController {
 
-    private final WorkService workService;
+    private final WorkService service;
+
+    @GetMapping("/blocking-operation")
+    public String blockingOperation() {
+        long startingTime = System.currentTimeMillis();
+        Person personA = service.getPerson(2);
+        Person personB = service.getPerson(5);
+        long endingTime = System.currentTimeMillis();
+        long elapsedTime = endingTime-startingTime;
+        return  elapsedTime+"";
+    }
 
     @GetMapping("/async-operation")
-    public CompletableFuture<Person> asyncOperation() {
-        // Call the asynchronous method of the service
-        return workService.asyncMethod(7);
+    public String asyncOperation() throws ExecutionException, InterruptedException {
+        long startingTime = System.currentTimeMillis();
+        CompletableFuture<Person>  personA = service.getPersonAsync(2);
+        CompletableFuture<Person>  personB = service.getPersonAsync(5);
+        Person resultA = personA.get();
+        Person resultB = personB.get();
+        long endingTime = System.currentTimeMillis();
+        long elapsedTime = endingTime-startingTime;
+        return elapsedTime+"";
     }
 }

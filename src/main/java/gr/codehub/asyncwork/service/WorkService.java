@@ -5,7 +5,6 @@ import gr.codehub.asyncwork.model.Person;
 import java.util.concurrent.CompletableFuture;
 
 public interface WorkService {
-
-    CompletableFuture<Person> asyncMethod( int personId);
-
+    CompletableFuture<Person> getPersonAsync( int personId);
+    Person getPerson(int personId);
 }
