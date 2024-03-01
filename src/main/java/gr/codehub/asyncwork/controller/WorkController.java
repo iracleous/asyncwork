@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @RestController
 @AllArgsConstructor
@@ -36,4 +37,18 @@ public class WorkController {
         long elapsedTime = endingTime-startingTime;
         return elapsedTime+"";
     }
+
+    @GetMapping("/simple-async-operation")
+    public String asyncOperation2() throws ExecutionException, InterruptedException {
+        long startingTime = System.currentTimeMillis();
+        Future<Person> personA = service.getPersonTask(2);
+        Future<Person> personB = service.getPersonTask(5);
+        Person resultA = personA.get();
+        Person resultB = personB.get();
+        long endingTime = System.currentTimeMillis();
+        long elapsedTime = endingTime-startingTime;
+        return  elapsedTime+"";
+    }
+
+
 }
